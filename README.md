@@ -16,7 +16,7 @@ Optimized for MX Linux Live USB environments. Executes a strict update and insta
 #### **Installation One-Liner**
 
 ```bash
-curl -sL bit.ly/kapcode-linux-scripts/moonlight-installer-mx | bash
+curl -sL bit.ly/install-moonlight-mx | bash
 ```
 License
 

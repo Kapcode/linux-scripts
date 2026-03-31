@@ -22,8 +22,5 @@ Optimized for **MX Linux Live USB** environments. Follows a strict execution ord
 
 ---
 
-### Usage Note
-These scripts are designed for **Lead Dev/System Admin** workflows. Most are tailored for a **Triple-GPU** architecture (**AMD Primary**, Intel Compute, NVIDIA Passthrough) and account for high-memory environments (**80GB RAM / 16GB ZRAM**).
-
 ### License
 Personal use for **Kapcode** projects. "Software made simple."

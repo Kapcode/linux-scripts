@@ -1,0 +1,13 @@
+#!/bin/bash
+# 1. Update package indices (no full upgrade)
+sudo apt update
+
+# 2. Install Flatpak
+sudo apt install -y flatpak
+
+# 3. Add Flathub repository
+sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+# 4. Install Moonlight
+# --noninteractive ensures it grabs the Mesa/VA-API runtimes for your RX 6500 XT automatically
+sudo flatpak install -y flathub com.moonlight_stream.Moonlight --noninteractive

@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# SGIN Keyboard Dropout Fix - MX-25.1 Live USB Environment
+# Usage: curl -sL https://bit.ly/your-link | sudo bash
+
+set -e
+
+if [[ $EUID -ne 0 ]]; then
+   echo "Execution failed: Script requires root privileges." 
+   exit 1
+fi
+
+echo "[*] Applying runtime power management overrides..."
+
+# 1. Mask TLP to prevent autosuspend on USB/I2C buses
+if systemctl is-active --quiet tlp; then
+    systemctl stop tlp
+fi
+systemctl mask tlp 2>/dev/null || true
+
+# 2. Force USB and I2C power control to 'on' via udev
+cat << 'EOF' > /etc/udev/rules.d/99-sgin-nospend.rules
+ACTION=="add", SUBSYSTEM=="usb", ATTR{power/control}="on"
+ACTION=="add", SUBSYSTEM=="i2c", ATTR{power/control}="on"
+EOF
+udevadm control --reload-rules
+udevadm trigger
+
+# 3. Mitigate USB bus contention (SquashFS lockups)
+sysctl -w vm.dirty_writeback_centisecs=1500 >/dev/null
+sysctl -w vm.dirty_expire_centisecs=3000 >/dev/null
+
+# 4. Generate GUI-clickable recovery script for XFCE desktop
+# Identifies the live session user (usually 'demo' on MX)
+LIVE_USER=${SUDO_USER:-$(logname 2>/dev/null || echo "demo")}
+DESKTOP_DIR="/home/$LIVE_USER/Desktop"
+
+if [ -d "$DESKTOP_DIR" ]; then
+    RECOVERY_SCRIPT="$DESKTOP_DIR/Reset_Keyboard.sh"
+    cat << 'EOF' > "$RECOVERY_SCRIPT"
+#!/usr/bin/env bash
+# Requires pkexec for GUI sudo prompt in XFCE
+pkexec sh -c 'modprobe -r i2c_hid_acpi i2c_hid atkbd i8042 && modprobe i8042 && modprobe atkbd && modprobe i2c_hid && modprobe i2c_hid_acpi'
+EOF
+    chmod +x "$RECOVERY_SCRIPT"
+    chown "$LIVE_USER:$LIVE_USER" "$RECOVERY_SCRIPT"
+    echo "[*] Recovery script deployed to $DESKTOP_DIR/Reset_Keyboard.sh"
+fi
+
+echo "[*] Runtime fixes applied. For persistent kernel flags (i8042.dumbkbd=1 intel_lpss_pci.ignore_idle=1), append to the MX boot menu manually."

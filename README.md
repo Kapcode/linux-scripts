@@ -1,7 +1,3 @@
-That’s a clean, branded short link. It fits the **Kapcode** identity perfectly.
-
-Since you've got the repo and the link ready, here is the final **README.md** structure for your `linux-scripts` repository. I’ve kept it technical and concise, matching your lead dev workflow.
-
 ---
 
 # linux-scripts
@@ -25,13 +21,6 @@ curl -sL bit.ly/kapcode-linux-scripts | bash
 
 ---
 
-## System Context
-Scripts in this repository are developed and tested against:
-* **OS:** Pop!_OS / MX Linux (Debian Base)
-* **Desktop:** KDE Plasma via X11
-* **Hardware:** Triple-GPU (AMD Primary, Intel Compute, NVIDIA Passthrough)
-* **Memory:** 80GB RAM / 16GB ZRAM
-
 ## License
 **Software made simple.** Internal use for Kapcode projects.
 
@@ -40,7 +29,7 @@ Scripts in this repository are developed and tested against:
 ### Pro-Tip for the Live USB:
 If you find yourself needing to run this frequently, you can actually add that `curl` command as a **KRunner** shortcut or a **Guake** startup script on your persistent storage to make it even faster. 
 
-Ready to push this to the repo?## # linux-scripts
+## # linux-scripts
 
 Useful scripts for Linux I have written to solve some issue or another.
 
